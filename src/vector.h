@@ -25,8 +25,8 @@ public:
     // Constructor de la clase
     Vector(uint8_t size) {
         _size = size;
-        data = new formato_t[size];
-        for (uint8_t i = 0; i < size; i++)
+        data = new formato_t[size+1];
+        for (uint8_t i = 0; i < size+1; i++)
         {
             // Inicio todo en cero
             data[i] = 0; 
@@ -45,6 +45,13 @@ public:
             data[i] = data[i+1];
         }
         data[_size-1] = newValue;
+    }
+
+    void clear(){
+        for (uint8_t i = 0; i < _size; i++)
+        {
+            data[i]=0;
+        }
     }
 
     // Agrego un valor al principio de la cadena y corro todos los valores una posicion hacia la derecha
@@ -92,19 +99,6 @@ public:
 
     #ifdef __SD_H__
     void printToSDFile(const char* filepath, bool eliminar = true) {
-
-        pinMode(chipSelect, OUTPUT);
-        pinMode(10, OUTPUT);
-        digitalWrite(10, HIGH); // Desactivar Ethernet
-        digitalWrite(chipSelect, LOW);   // Activar SD
-
-
-        if (!SD.begin(chipSelect)) {
-            Serial.println(F("SD card failed, or not present"));
-            while (1);
-        }
-        Serial.println(F("SD card initialized."));
-
         if (SD.exists(filepath) && eliminar)
         {
             SD.remove(filepath);
@@ -122,7 +116,6 @@ public:
 
         dataFile.close();
     }
-
     #endif
 
 };
